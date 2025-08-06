@@ -1,0 +1,721 @@
+
+1 / 21
+Tutorial 01 to do in class – Remember to upload the repo link to Teams
+FIRST COMPLETE THE ENTIRE TUTORIAL (IGNORE THE ACTIVITES) – AT THE END, COMPLETE THE PROPOSED ACTIVITIES
+
+Paso 1: Creación del Proyecto Spring Boot
+Para iniciar un nuevo proyecto en Spring Boot, existen dos métodos recomendados:
+Opción A: Usando Spring Initializr (Recomendado)
+El Spring Initializr es una herramienta web que permite generar un proyecto Spring Boot con la configuración deseada. Sigue estos pasos:
+1. Accede a Spring Initializr:
+Abre el navegador y ve a 👉 https://start.spring.io/
+2. Configura el Proyecto:
+o Project: Selecciona Maven (ya que usaremos Maven como gestor de dependencias).
+o Language: Selecciona Java.
+o Spring Boot Version: Selecciona la última versión estable (por ejemplo, 3.2.x).
+o Project Metadata:
+§ Group: com.docencia
+§ Artifact: tutorial01
+§ Name: tutorial01
+§ Package Name: com.docencia.tutorial0l
+o Packaging: Jar
+o Java: Aquí debes elegir la versión de Java que tienes instalada en tu sistema.
+§ Para comprobar qué versión de Java tienes instalada, abre una terminal (o cmd en Windows) y ejecuta:
+java -version
+§ Verás una salida similar a:
+openjdk version "17.0.9" 2023-10-17
+OpenJDK Runtime Environment (build 17.0.9+1)
+OpenJDK 64-Bit Server VM (build 17.0.9+1, mixed mode, sharing)
+§ Si tienes Java 17 instalado, selecciona 17 en Spring Initializr.
+§ Si tienes Java 21 instalado, selecciona 21.
+2 / 21
+3. Agregar Dependencias:
+o Haz clic en el botón "Add Dependencies" y selecciona:
+o Spring Web (para crear aplicaciones web con Spring MVC)
+o Thymeleaf (para plantillas HTML)
+
+
+4. Generar y Descargar el Proyecto:
+o Haz clic en Generate para descargar el archivo ZIP.
+o Descomprime el archivo en una carpeta de tu preferencia.
+5. Ejecutar el Proyecto:
+o Abre una terminal (o CMD en Windows), navega hasta la carpeta del proyecto y ejecuta:
+cd tutorial
+./mvnw spring-boot:run
+o Esto iniciará el servidor en http://localhost:8080/
+
+
+Opción B: Usando Spring Boot CLI
+3 / 21
+Si prefieres usar la línea de comandos para generar el proyecto, puedes usar el Spring Boot CLI. Primero, debes instalarlo y configurarlo.
+1. Instalación del Spring Boot CLI en Windows
+Paso 1: Descargar el Spring Boot CLI
+· Descarga la última versión del Spring Boot CLI desde:
+o spring-boot-cli-3.4.2-bin.zip
+Paso 2: Descomprimir y Configurar la Variable de Entorno
+1. Descomprime el archivo en una carpeta, por ejemplo:
+C:\spring-boot-cli\
+2. Configurar la variable de entorno en Windows:
+o Abre el Explorador de Windows y haz clic derecho en Este PC → Propiedades → Configuración avanzada del sistema.
+o En la pestaña Opciones avanzadas, haz clic en Variables de entorno.
+o En la sección Variables del sistema, busca la variable Path y haz clic en Editar.
+o Agrega una nueva entrada con la ruta al directorio bin/ del Spring Boot CLI, por ejemplo:
+C:\spring-boot-cli\bin
+o Guarda los cambios y cierra todas las ventanas.
+Paso 3: Verificar la Instalación
+Abre una terminal (CMD) y ejecuta:
+spring --version
+Si la instalación fue exitosa, deberías ver:
+Spring CLI v3.4.2
+Paso 4: Crear un Proyecto con Spring CLI
+Una vez instalado, puedes crear un proyecto ejecutando:
+spring init --name=tutorial --dependencies=web,thymeleaf tutorial
+Luego, entra a la carpeta del proyecto y ejecuta:
+cd tutorial
+mvn spring-boot:run
+4 / 21
+
+2. Instalación del Spring Boot CLI en macOS
+Opción 1: Usando Homebrew (Recomendado)
+Si tienes Homebrew instalado, puedes instalar el Spring Boot CLI con:
+brew install spring-boot-cli
+Luego, verifica la instalación con:
+spring --version
+Si ves Spring CLI v3.4.2, la instalación fue exitosa.
+Opción 2: Instalación Manual
+Si prefieres instalarlo manualmente:
+1. Descarga el archivo ZIP desde:
+o spring-boot-cli-3.4.2-bin.tar.gz
+2. Descomprime el archivo en una carpeta, por ejemplo:
+mkdir -p ~/spring-boot-cli
+tar -xzf spring-boot-cli-3.4.2-bin.tar.gz -C ~/spring-boot-cli
+3. Agrega el directorio bin/ al PATH editando el archivo ~/.zshrc (o ~/.bashrc si usas bash):
+echo 'export PATH="$HOME/spring-boot-cli/bin:$PATH"' >> ~/.zshrc
+source ~/.zshrc
+4. Verifica la instalación con:
+spring --version
+5. Crea un proyecto con:
+spring init --name=tutorial01 --dependencies=web,lombok,thymeleaf  
+
+mvn spring-boot:run
+
+
+
+5 / 21
+
+
+
+📌 Diferencia entre ./mvnw y mvn en Maven
+Tanto ./mvnw como mvn son comandos para ejecutar Maven, pero tienen diferencias clave en su propósito y comportamiento.
+
+1️.  $ mvn (Apache Maven instalado en el sistema)
+Cuando ejecutas:
+mvn clean install
+· Requiere que Maven esté instalado en tu sistema y configurado en la variable PATH.
+· Usa la versión de Maven instalada en el sistema.
+· Si Maven no está instalado, el comando fallará.
+✅ Úsalo si ya tienes Maven instalado y configurado.
+
+2️. $ ./mvnw (Maven Wrapper - Maven incorporado en el proyecto)
+Cuando ejecutas:
+./mvnw clean install
+(En Windows, usa mvnw.cmd en lugar de ./mvnw)
+· No requiere que Maven esté instalado en tu sistema.
+· Descarga automáticamente la versión de Maven definida en el proyecto (.mvn/wrapper/maven-wrapper.properties).
+6 / 21
+· Garantiza que todos los desarrolladores usen la misma versión de Maven, evitando problemas de compatibilidad.
+✅ Úsalo si trabajas en equipo o si no quieres instalar Maven manualmente.
+A. A “clean” hello world version
+Controller
+· Go to tutorial01/controllers/HomeController.java and create a file HomeController.java with the next content (or replace its content if the file already exists):
+
+package com.docencia.tutorial01.controllers;
+
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
+
+@Controller
+public class HomeController {
+
+   @GetMapping("/")
+   public String index(Model model) {
+       model.addAttribute("title", "Welcome to Spring Boot");
+       model.addAttribute("subtitle", "An Spring Boot Eafit App");
+       return "home/index";
+   }
+}
+
+Views
+· Go to resources/templates/ and create a folder fragments
+· Go to resources/templates/fragments and create a file footer.html with the following content:
+
+<footer th:fragment="footer">
+     <!-- footer -->
+ <div class="copyright py-4 text-center text-white">
+   <div class="container">
+     <small>
+       Copyright - <a class="text-reset fw-bold text-decoration-none" target="_blank"
+         href="https://sebastian-gomez.com">
+         Sebastian Gomez
+       </a>
+     </small>
+   </div>
+</footer>
+7 / 21
+· Go to resources/templates/fragments and create a file header.html with the following content:
+
+Add Entire Code
+<!-- header -->
+<th:block th:fragment="header">
+   <nav th:fragment="header" class="navbar navbar-expand-lg navbar-dark bg-secondary py-4">
+       <div class="container">
+           <a class="navbar-brand" href="#">Online Store</a>
+           <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup"
+               aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+               <span class="navbar-toggler-icon"></span>
+           </button>
+           <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+               <div class="navbar-nav ms-auto">
+                   <a class="nav-link active" th:href="@{/}">Home</a>
+                   <a class="nav-link active" th:href="@{/about}">About</a>
+               </div>
+           </div>
+       </div>
+   </nav>
+
+   <header class="masthead bg-primary text-white text-center py-4">
+       <div class="container d-flex align-items-center flex-column">
+           <h2 th:text="${subtitle} ?: 'A Spring Boot EAFIT App'"></h2>
+       </div>
+   </header>
+</th:block>
+
+· Go to resources/templates/ and create a folder home
+· Go to resources/templates/home and create a file index.html with the following content:
+
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+   <meta charset="UTF-8">
+   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+   
+   <!-- Bootstrap CSS -->
+   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous">
+   
+   <!-- Custom CSS -->
+   <link rel="stylesheet" th:href="@{/css/app.css}">
+
+8 / 21
+   <title th:text="${title} ?: 'Online Store'"></title>
+</head>
+<body>
+   <div th:replace="~{fragments/header :: header}"></div>
+
+   <div class="container my-4">
+       <div class="text-center">
+           Welcome to the application
+       </div>
+   </div>
+
+   <div th:replace="~{fragments/footer :: footer}"></div>
+</body>
+</html>
+
+
+CSS
+· Go to resources/static and create a folder css
+· Go to resources/static and create a file app.css with the following content:
+
+.bg-secondary {
+ background-color: #2c3e50 !important;
+}
+.copyright {
+ background-color: #1a252f;
+}
+.bg-primary {
+ background-color: #1abc9c !important;
+}
+nav{
+ font-weight: 700;
+}
+.img-card{
+ height: 18vw;
+ object-fit: cover;
+}
+
+Run the application
+In the Terminal, go to the project directory, and execute the following:
+
+./mvnw spring-boot:run
+9 / 21
+
+You should see the application running.
+
+
+
+B. Una página "About"
+1. Creando la Vista
+Crea un nuevo archivo en la carpeta src/main/resources/templates/home/ llamado about.html con el siguiente contenido:
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+   <meta charset="UTF-8">
+   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+   
+   <!-- Bootstrap CSS -->
+   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous">
+   
+   <!-- Custom CSS -->
+   <link rel="stylesheet" th:href="@{/css/app.css}">
+
+   <title th:text="${title} ?: 'About Us'"></title>
+</head>
+<body>
+   <div th:replace="~{fragments/header :: header}"></div>
+
+   <div class="container my-4">
+       <div class="row">
+           <div class="col-lg-4 ms-auto">
+               <p class="lead" th:text="${description}"></p>
+           </div>
+           <div class="col-lg-4 me-auto">
+               <p class="lead" th:text="${author}"></p>
+           </div>
+       </div>
+   </div>
+10 / 21
+
+   <div th:replace="~{fragments/footer :: footer}"></div>
+</body>
+</html>
+
+2. Creando el Controlador
+Añade un nuevo método en el archivo HomeController.java dentro de src/main/java/com/docencia/tutorial01/controllers/:
+
+package com.docencia.tutorial01.controllers;
+
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
+
+@Controller
+public class HomeController {
+
+   @GetMapping("/")
+   public String index(Model model) {
+       model.addAttribute("title", "Welcome to Spring Boot");
+       model.addAttribute("subtitle", "An Spring Boot Eafit App");
+       return "home/index";
+   }
+
+   @GetMapping("/about")
+   public String about(Model model) {
+       model.addAttribute("title", "About Us - Online Store");
+       model.addAttribute("subtitle", "About Us");
+       model.addAttribute("description", "This is an about page ...");
+       model.addAttribute("author", "Developed by: Your Name");
+       return "home/about";
+   }
+}
+
+
+3. Modificando el Header
+Para incluir el enlace a la nueva página "About", actualiza el archivo src/main/resources/templates/fragments/header.html en la sección del menú de navegación:
+
+11 / 21
+<!-- header -->
+<th:block th:fragment="header">
+<nav th:fragment="header" class="navbar navbar-expand-lg navbar-dark bg-secondary py-4">
+   <div class="container">
+       <a class="navbar-brand" href="#">Online Store</a>
+       <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup"
+           aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+           <span class="navbar-toggler-icon"></span>
+       </button>
+       <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+           <div class="navbar-nav ms-auto">
+               <a class="nav-link active" th:href="@{/}">Home</a>
+               <a class="nav-link active" th:href="@{/about}">About</a>
+           </div>
+       </div>
+   </div>
+</nav>
+
+<header class="masthead bg-primary text-white text-center py-4">
+   <div class="container d-flex align-items-center flex-column">
+       <h2 th:text="${subtitle} ?: 'A Spring Boot EAFIT App'"></h2>
+   </div>
+</header>
+
+
+4. Ejecutar la Aplicación
+Para correr la aplicación, abre una terminal y ejecuta:
+./mvnw spring-boot:run
+Luego, abre un navegador y visita:
+· Página de inicio: http://localhost:8080/
+· Página "About": http://localhost:8080/about
+
+12 / 21
+
+
+
+Activity 1
+· Take a look of the previous routes. Do you have any comment? We will discuss it the next class.
+Activity 2
+· Create a “/contact” section in which you display the application email, address, and phone number. Use fake information.
+
+C. Mostrar Productos
+1. Creando el Controlador
+Crea un archivo llamado ProductController.java dentro de src/main/java/com/docencia/tutorial01/controllers/ y agrégale el siguiente contenido:
+package com.docencia.tutorial01.controllers;
+
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+
+import java.util.List;
+import java.util.Map;
+
+@Controller
+public class ProductController {
+
+   private static final List<Map<String, String>> products = List.of(
+       Map.of("id", "1", "name", "TV", "description", "Best TV"),
+       Map.of("id", "2", "name", "iPhone", "description", "Best iPhone"),
+       Map.of("id", "3", "name", "Chromecast", "description", "Best Chromecast"),
+       Map.of("id", "4", "name", "Glasses", "description", "Best Glasses")
+   );
+13 / 21
+
+   @GetMapping("/products")
+   public String index(Model model) {
+       model.addAttribute("title", "Products - Online Store");
+       model.addAttribute("subtitle", "List of products");
+       model.addAttribute("products", products);
+       return "product/index";
+   }
+
+   @GetMapping("/products/{id}")
+   public String show(@PathVariable String id, Model model) {
+       int productId = Integer.parseInt(id) - 1;
+
+       if (productId < 0 || productId >= products.size()) {
+           return "redirect:/products";
+       }
+
+       Map<String, String> product = products.get(productId);
+       model.addAttribute("title", product.get("name") + " - Online Store");
+       model.addAttribute("subtitle", product.get("name") + " - Product Information");
+       model.addAttribute("product", product);
+       return "product/show";
+   }
+}
+
+
+2. Creando la Vista de la Lista de Productos
+Crea la carpeta src/main/resources/templates/product/ y dentro de ella un archivo index.html con el siguiente contenido:
+
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+   <meta charset="UTF-8">
+   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+   
+   <!-- Bootstrap CSS -->
+   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous">
+   
+   <!-- Custom CSS -->
+   <link rel="stylesheet" th:href="@{/css/app.css}">
+14 / 21
+
+   <title th:text="${title}"></title>
+</head>
+<body>
+   <div th:replace="~{fragments/header :: header}"></div>
+
+   <div class="container my-4">
+       <h2 class="text-center" th:text="${subtitle}"></h2>
+       <div class="row">
+           <div class="col-md-4 col-lg-3 mb-2" th:each="product : ${products}">
+               <div class="card">
+                   <img src="https://placehold.co/600x400" class="card-img-top img-card">
+                   <div class="card-body text-center">
+                       <a th:href="@{/products/{id}(id=${product.id})}"  
+                          class="btn bg-primary text-white"  
+                          th:text="${product.name}">
+                       </a>
+                   </div>
+               </div>
+           </div>
+       </div>
+   </div>
+
+   <div th:replace="~{fragments/footer :: footer}"></div>
+</body>
+</html>
+
+
+3. Creando la Vista de un Producto Específico
+En la misma carpeta src/main/resources/templates/product/, crea un archivo show.html con el siguiente contenido:
+
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+   <meta charset="UTF-8">
+   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+   
+   <!-- Bootstrap CSS -->
+   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous">
+   
+   <!-- Custom CSS -->
+   <link rel="stylesheet" th:href="@{/css/app.css}">
+15 / 21
+
+   <title th:text="${title}"></title>
+</head>
+<body>
+   <div th:replace="~{fragments/header :: header}"></div>
+
+   <div class="container my-4">
+       <div class="card mb-3">
+           <div class="row g-0">
+               <div class="col-md-4">
+                   <img src="https://placehold.co/400x400" class="img-fluid rounded-start">
+               </div>
+               <div class="col-md-8">
+                   <div class="card-body">
+                       <h5 class="card-title" th:text="${product.name}"></h5>
+                       <p class="card-text" th:text="${product.description}"></p>
+                   </div>
+               </div>
+           </div>
+       </div>
+   </div>
+
+   <div th:replace="~{fragments/footer :: footer}"></div>
+</body>
+</html>
+
+
+4. Agregando las Rutas
+Como en Spring Boot no usamos un archivo web.php, las rutas ya están definidas en el ProductController.java con las anotaciones @GetMapping. No se necesitan cambios adicionales.
+
+5. Ejecutar la Aplicación
+Para correr la aplicación, abre una terminal y ejecuta:
+./mvnw spring-boot:run
+Luego, abre un navegador y visita:
+· Lista de productos: http://localhost:8080/products
+· Detalle de un producto: http://localhost:8080/products/1
+16 / 21
+
+Resultado Esperado
+✔ En la página /products, verás una lista de productos con botones que redirigen a sus respectivas páginas.
+✔ Al hacer clic en un producto, serás llevado a su página de detalles en /products/{id}.
+
+
+
+
+Activity 3
+· Add the (“/products”) route as a new menu option (in the header navbar).
+Activity 4
+· Add prices for each product and display the information in the product.show view.
+Activity 5
+· Modify the show method. If the product number entered by the URL is not valid, redirect the user to the home page (“home.index”) route.
+Activity 6
+· Add a conditional in the “product.show” view. If the price of a product is greater than 100, display the product name in red
+
+
+D. Creación de Productos (Simulación)
+
+1. Agregar la Dependencia de Jakarta Validation en tu POM.xml, la utilizaremos después
+17 / 21
+<dependency>
+           <groupId>org.springframework.boot</groupId>
+           <artifactId>spring-boot-starter-validation</artifactId>
+      </dependency>
+
+2. Actualizando el Controlador
+Modifica el archivo ProductController.java dentro de src/main/java/com/docencia/tutorial01/controllers/ para incluir la funcionalidad de crear y validar productos:
+
+package com.docencia.tutorial01.controllers;
+
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PostMapping;
+
+import jakarta.validation.Valid;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+@Controller
+public class ProductController {
+
+   private static final List<Map<String, String>> products = new ArrayList<>(List.of(
+       Map.of("id", "1", "name", "TV", "description", "Best TV"),
+       Map.of("id", "2", "name", "iPhone", "description", "Best iPhone"),
+       Map.of("id", "3", "name", "Chromecast", "description", "Best Chromecast"),
+       Map.of("id", "4", "name", "Glasses", "description", "Best Glasses")
+   ));
+
+   @GetMapping("/products")
+   public String index(Model model) {
+       model.addAttribute("title", "Products - Online Store");
+       model.addAttribute("subtitle", "List of products");
+       model.addAttribute("products", products);
+       return "product/index";
+   }
+
+   @GetMapping("/products/create")
+18 / 21
+   public String create(Model model) {
+       model.addAttribute("title", "Create Product");
+       model.addAttribute("productForm", new ProductForm());
+       return "product/create";
+   }
+
+   @PostMapping("/products/save")
+   public String save(@Valid @ModelAttribute("productForm") ProductForm productForm, BindingResult result, Model model) {
+       if (result.hasErrors()) {
+           model.addAttribute("title", "Create Product");
+           return "product/create";
+       }
+
+       // Simulación de guardar el producto en la lista (sin persistencia en DB)
+       Map<String, String> newProduct = new HashMap<>();
+       newProduct.put("id", String.valueOf(products.size() + 1));
+       newProduct.put("name", productForm.getName());
+       newProduct.put("description", "Price: $" + productForm.getPrice());
+       products.add(newProduct);
+
+       return "redirect:/products";
+   }
+}
+
+
+3. Creando la Clase para Validación
+Spring Boot usa DTOs para validar formularios. Crea un nuevo archivo ProductForm.java dentro de src/main/java/com/docencia/tutorial01/controllers/:
+package com.docencia.tutorial01.controllers;
+
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
+
+public class ProductForm {
+   
+   @NotEmpty(message = "The product name is required")
+   private String name;
+
+   @NotNull(message = "The price is required")
+   private Double price;
+
+   public String getName() {
+19 / 21
+       return name;
+   }
+
+   public void setName(String name) {
+       this.name = name;
+   }
+
+   public Double getPrice() {
+       return price;
+   }
+
+   public void setPrice(Double price) {
+       this.price = price;
+   }
+}
+
+3. Creando la Vista para Crear Productos
+Crea un nuevo archivo create.html en src/main/resources/templates/product/:
+
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+   <meta charset="UTF-8">
+   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+   
+   <!-- Bootstrap CSS -->
+   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous">
+   
+   <!-- Custom CSS -->
+   <link rel="stylesheet" th:href="@{/css/app.css}">
+
+   <title th:text="${title}"></title>
+</head>
+<body>
+   <div th:replace="~{fragments/header :: header}"></div>
+
+   <div class="container my-4">
+       <div class="row justify-content-center">
+           <div class="col-md-8">
+               <div class="card">
+                   <div class="card-header">Create Product</div>
+                   <div class="card-body">
+                       <form th:action="@{/products/save}" method="post" th:object="${productForm}">
+20 / 21
+                           <div th:if="${#fields.hasErrors('*')}" class="alert alert-danger">
+                               <ul>
+                                   <li th:each="err : ${#fields.errors('*')}" th:text="${err}"></li>
+                               </ul>
+                           </div>
+                           
+                           <div class="mb-2">
+                               <label for="name" class="form-label">Product Name</label>
+                               <input type="text" id="name" class="form-control" th:field="*{name}">
+                           </div>
+
+                           <div class="mb-2">
+                               <label for="price" class="form-label">Price</label>
+                               <input type="text" id="price" class="form-control" th:field="*{price}">
+                           </div>
+
+                           <input type="submit" class="btn btn-primary" value="Send">
+                       </form>
+                   </div>
+               </div>
+           </div>
+       </div>
+   </div>
+
+   <div th:replace="~{fragments/footer :: footer}"></div>
+</body>
+</html>
+
+
+
+4. Modificando las Rutas
+En Spring Boot, las rutas ya están definidas dentro del ProductController.java
+Las rutas que ahora manejamos son:
+· GET /products → Muestra la lista de productos.
+· GET /products/create → Muestra el formulario para crear un producto.
+· POST /products/save → Guarda un nuevo producto en la lista y redirige a /products.
+
+5. Ejecutar la Aplicación
+Para correr la aplicación, abre una terminal y ejecuta:
+21 / 21
+./mvnw spring-boot:run
+Luego, abre un navegador y visita:
+· Crear un nuevo producto: http://localhost:8080/products/create
+Después de llenar el formulario y enviarlo, serás redirigido a:
+· Lista de productos: http://localhost:8080/products
+
+
+
+
+Activity 7
+· Try to understand the previous code. Add a new product but leave the name empty (and click send). Then, leave the price empty. Then, enter the two fields.
+Activity 8
+· Modify the previous code to only allow numbers greater than zero for the prices.  
+Activity 9
+· If the info entered by the form is valid. Then display a message saying, “Product created”. Note: create a new view (which uses the layout system).
+Activity 10
+· Add a new menu option in the header (app layout), that links to the “/products/create” page.
+
+Note: create a repo with all this code (called SpringBootTutorial04) and upload the repo link to the corresponding Teams Assignment.
