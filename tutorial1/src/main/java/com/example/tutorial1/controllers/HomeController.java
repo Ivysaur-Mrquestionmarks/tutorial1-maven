@@ -1,4 +1,4 @@
-package com.docencia.tutorial01.controllers;
+package com.example.tutorial1.controllers;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
