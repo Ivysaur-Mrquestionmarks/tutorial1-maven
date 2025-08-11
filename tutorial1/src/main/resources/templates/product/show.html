@@ -13,14 +13,6 @@
 
    <title th:text="${title}"></title>
 
-    td[data-price]:after {
-      content: attr(${product.price});
-    }
-
-    td[data-price > 100]:after {
-      color: red;
-    }
-
 </head>
 <body>
    <div th:replace="~{fragments/header :: header}"></div>
@@ -33,9 +25,9 @@
                </div>
                <div class="col-md-8">
                    <div class="card-body">
-                        
-                       <h5 class="card-title text-danger" th:text="${product.name}"></h5>
-                       <td data-price="${product.name}"></td>
+                       
+                       <h5 class="card-title" th:text="(${product.price}>100)? ' ' :${product.name}"></h5>
+                        <h5 class="card-title text-danger" th:text="(${product.price}<100)? ' ' :${product.name}"></h5>
                         
                        <p class="card-text" th:text="${product.description}"></p>
                        <p class="card-text" th:text="${product.price}"></p>

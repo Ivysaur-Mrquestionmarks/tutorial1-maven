@@ -1,0 +1,31 @@
+package com.example.tutorial1.controllers;
+
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
+
+public class ProductForm {
+   
+   @NotEmpty(message = "The product name is required")
+   private String name;
+
+   @NotNull(message = "The price is required")
+   private Double price;
+
+   public String getName() {
+       return name;
+   }
+
+   public void setName(String name) {
+       this.name = name;
+   }
+
+   public Double getPrice() {
+       return price;
+   }
+
+   public void setPrice(Double price) {
+       if (price > 0) {
+            this.price = price;
+       }
+   }
+}
