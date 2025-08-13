@@ -34,7 +34,7 @@ public class ProductController {
        return "product/index";
    }
 
-   /*@GetMapping("/products/{id}")
+   @GetMapping("/products/{id}")
    public String show(@PathVariable String id, Model model) {
        int productId = Integer.parseInt(id) - 1;
 
@@ -43,11 +43,11 @@ public class ProductController {
        }
 
        Map<String, String> product = products.get(productId);
-       model.addAttribute("title", product.get("name") + " - Online Store");
-       model.addAttribute("subtitle", product.get("name") + " - Product Information");
+       model.addAttribute("title", product.get( "name") + " - Online Store");
+       model.addAttribute("subtitle", product.get( "name") + " - Product Information");
        model.addAttribute("product", product);
        return "product/show";
-   }*/
+   }
 
  @GetMapping("/products/create")
    public String create(Model model) {
